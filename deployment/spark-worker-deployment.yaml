@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: spark-worker
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: spark-worker
+    spec:
+      containers:
+        - name: spark-worker
+          image: spark-worker
+          imagePullPolicy: Always
+          env:
+            - name: SPARK_WORKER_MEMORY
+              value: '2g'
+            - name: SPARK_WORKER_CORES
+              value: '1'
+          ports:
+            - containerPort: 8081
+          resources:
+            requests:
+              cpu: 1
+              memory: 2Gi
+          volumeMounts:
+            - name: spark-worker
+              mountPath: /data
+      volumes:
+        - name: spark-worker
+          persistentVolumeClaim:
+            claimName: spark-worker

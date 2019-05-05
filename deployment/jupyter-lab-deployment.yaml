@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: jupyter-lab
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: jupyter-lab
+    spec:
+      containers:
+      - name: jupyter-lab
+        image: jupyter-lab
+        resources:
+          requests:
+            cpu: 1
+            memory: 4Gi
+        volumeMounts:
+          - name: notebooks
+            mountPath: /notebooks
+          - name: spark-worker
+            mountPath: /data
+      volumes:
+        - name: notebooks
+          persistentVolumeClaim:
+            claimName: notebooks
+        - name: spark-worker
+          persistentVolumeClaim:
+            claimName: spark-worker
