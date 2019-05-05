@@ -71,5 +71,6 @@ RUN pip install toree && \
 EXPOSE 8888
 
 COPY start-jupyter-lab.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start-jupyter-lab.sh
 
-CMD ["start-jupyter-lab.sh"]
+CMD ["/usr/local/bin/start-jupyter-lab.sh"]

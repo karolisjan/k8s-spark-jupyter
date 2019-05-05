@@ -62,5 +62,6 @@ RUN mkdir -p ${DATA_DIR}
 EXPOSE 8081/tcp
 
 COPY start-spark-worker.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start-spark-worker.sh
 
-CMD ["start-spark-worker.sh"]
+CMD ["/usr/local/bin/start-spark-worker.sh"]

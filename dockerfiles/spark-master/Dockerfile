@@ -29,6 +29,7 @@ RUN mkdir -p ${SPARK_RECOVERY_DIR}
 EXPOSE 8080/tcp 7077/tcp 
 
 COPY spark-defaults.conf ${SPARK_HOME}/conf/spark-defaults.conf
-COPY start-spark-master.sh .
+COPY start-spark-master.sh /usr/local/bin 
+RUN chmod +x /usr/local/bin/start-spark-master.sh
 
-CMD ["start-spark-master.sh"]
+CMD ["/usr/local/bin/start-spark-master.sh"]
