@@ -7,6 +7,7 @@ ENV TINI_VERSION 0.18.0
 ENV SPARK_VERSION 2.4.2
 ENV HADOOP_VERSION 2.7
 ENV CONDA_VERSION latest
+ENV TOREE_VERSION 0.3.0
 
 # Tini 
 RUN wget --quiet "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini" && \
@@ -56,11 +57,18 @@ RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
     jupyter labextension install @jupyterlab/plotly-extension && \
     jupyter labextension install jupyterlab_bokeh
 
-ENV DATA_DIR /data
-RUN mkdir -p ${DATA_DIR}
+# Setup Jupyter config
+ENV JUPYTER_CONFIG_DIR /opt/jupyter/config
+RUN mkdir -p ${JUPYTER_CONFIG_DIR}
+COPY jupyter_notebook_config.py ${JUPYTER_CONFIG_DIR}
 
-EXPOSE 8081/tcp
+# Apache Toree kernel for Spark and notebook interaction with Spark 2.0
+RUN wget --quiet "http://www.apache.org/dyn/closer.lua/incubator/toree/${TOREE_VERSION}-incubating/toree/toree-${TOREE_VERSION}-incubating-bin.tar.gz" && \
+    pip install toree-${TOREE_VERSION}-incubating-bin.tar.gz && \
+    jupyter toree install --ToreeInstall.prefix=${CONDA_HOME} --ToreeInstall.toree_opts=--nosparkcontext
 
-COPY start-spark-worker.sh /usr/local/bin/
+EXPOSE 8888
 
-CMD ["start-spark-worker.sh"]
+COPY start-jupyter-lab.sh /usr/local/bin/
+
+CMD ["start-jupyter-lab.sh"]
