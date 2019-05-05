@@ -7,7 +7,6 @@ ENV TINI_VERSION 0.18.0
 ENV SPARK_VERSION 2.4.2
 ENV HADOOP_VERSION 2.7
 ENV CONDA_VERSION latest
-ENV TOREE_VERSION 0.3.0
 
 # Tini 
 RUN wget --quiet "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini" && \
@@ -61,11 +60,13 @@ RUN jupyter labextension install @jupyter-widgets/jupyterlab-manager && \
 ENV JUPYTER_CONFIG_DIR /opt/jupyter/config
 RUN mkdir -p ${JUPYTER_CONFIG_DIR}
 COPY jupyter_notebook_config.py ${JUPYTER_CONFIG_DIR}
+RUN mkdir -p /notebooks
 
 # Apache Toree kernel for Spark and notebook interaction with Spark 2.0
-RUN wget --quiet "http://www.apache.org/dyn/closer.lua/incubator/toree/${TOREE_VERSION}-incubating/toree/toree-${TOREE_VERSION}-incubating-bin.tar.gz" && \
-    pip install toree-${TOREE_VERSION}-incubating-bin.tar.gz && \
-    jupyter toree install --ToreeInstall.prefix=${CONDA_HOME} --ToreeInstall.toree_opts=--nosparkcontext
+RUN pip install toree && \
+    jupyter toree install \
+        --ToreeInstall.prefix=${CONDA_HOME} \
+        --ToreeInstall.toree_opts=--nosparkcontext
 
 EXPOSE 8888
 
