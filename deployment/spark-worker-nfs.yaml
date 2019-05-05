@@ -4,7 +4,7 @@ metadata:
   name: spark-worker
 spec:
   capacity:
-    storage: 100Gi
+    storage: 10Gi
   accessModes:
     - ReadWriteMany
   nfs:
@@ -21,4 +21,4 @@ spec:
     - ReadWriteMany
   resources:
     requests:
-      storage: 100Gi
+      storage: 10Gi
